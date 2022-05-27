@@ -47,15 +47,15 @@ public class FirebaseAuthOAuthViewController: UIViewController, FlutterPlugin {
 	func consumeCredentials(_ credential: AuthCredential) {
 		if call?.method == FirebaseAuthOAuthViewController.CREATE_USER_METHOD {
 			Auth.auth().signIn(with: credential) { authResult, error in
-                guard let currentUser = Auth.auth().currentUser else {
-                    self.finalizeResult(.PluginError(error: "currentUser is nil. Make sure a user exists when \(FirebaseAuthOAuthViewController.CREATE_USER_METHOD) is used."))
-                    return
-                }
 				if let firebaseError = error {
 					self.finalizeResult(
 						FirebaseAuthOAuthPluginError
 							.FirebaseAuthError(error: firebaseError)
 					)
+				}
+				guard let currentUser = Auth.auth().currentUser else {
+						self.finalizeResult(.PluginError(error: "currentUser is nil. Make sure a user exists when \(FirebaseAuthOAuthViewController.CREATE_USER_METHOD) is used."))
+						return
 				}
 				self.finalizeResult(authResult, currentUser)
 			}
